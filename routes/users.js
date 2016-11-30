@@ -1,9 +1,15 @@
+const Validation = require('../validation/users');
+const Handler = require('../handlers/users');
+
 module.exports = [
     {
-        method: 'GET',
+        method: 'POST',
         path: '/user',
-        handler: (request, reply) => {
-            reply('hello world user');
+        config: {
+            validate: {
+                payload: Validation.createUser
+            },
+            handler: Handler.createUser
         }
     }
 ];
