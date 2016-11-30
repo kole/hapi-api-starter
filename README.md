@@ -1,4 +1,4 @@
-# hapi-api-starter
+# HapiJS API Seed App
 A general set of API endpoints that most apps use.
 
 # Documentation
