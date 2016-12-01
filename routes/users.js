@@ -6,9 +6,7 @@ module.exports = [
         method: 'POST',
         path: '/user',
         config: {
-            validate: {
-                payload: Validation.createUser
-            },
+            validate: Validation.createUser,
             handler: Handler.createUser
         }
     }
