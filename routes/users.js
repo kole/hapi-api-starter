@@ -3,11 +3,11 @@ const Handler = require('../handlers/users');
 
 module.exports = [
     {
-        method: 'POST',
-        path: '/user',
+        method: 'GET',
+        path: '/user/{id}',
         config: {
-            validate: Validation.createUser,
-            handler: Handler.createUser
+            validate: Validation.getUser,
+            handler: Handler.getUser
         }
     }
 ];

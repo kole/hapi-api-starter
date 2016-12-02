@@ -1,5 +1,5 @@
 module.exports = {
-    createUser: (request, reply) => {
-        reply('create user');
+    getUser: (request, reply) => {
+        reply('get user');
     }
 };
