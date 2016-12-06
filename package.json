@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/kole/hapi-api-starter#readme",
   "dependencies": {
-    "hapi": "16.0.0",
+    "hapi": "16.0.1",
     "hapi-mongo-models": "6.0.0",
-    "joi": "^10.0.1",
+    "joi": "^10.0.5",
     "mongo-models": "1.1.0",
     "mongodb": "2.2.12"
   },
