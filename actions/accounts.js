@@ -8,6 +8,7 @@ class Accounts extends MongoModels {
         // eslint-disable-next-line no-underscore-dangle
         const userId = [usr._id];
         const document = {
+            _id: user.accounts[0],
             createdAt: moment(moment()).unix(),
             users: userId
         };
@@ -19,6 +20,10 @@ class Accounts extends MongoModels {
         });
     }
 }
+
+Accounts.indexes = [
+    { key: { _id: 1 } }
+];
 
 Accounts.collection = 'Accounts';
 module.exports = Accounts;

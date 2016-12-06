@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/kole/hapi-api-starter#readme",
   "dependencies": {
+    "bcrypt": "^1.0.0",
+    "boom": "^4.2.0",
     "hapi": "16.0.1",
     "hapi-mongo-models": "6.0.0",
     "joi": "^10.0.5",
     "mongo-models": "1.1.0",
-    "mongodb": "2.2.12"
+    "mongodb": "2.2.12",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
