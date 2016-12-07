@@ -6,7 +6,7 @@ module.exports = {
     signup: (request, reply) => {
         const payload = request.payload;
 
-        // create user and account IDs now to limit DB queries on signup
+        // create user ID and account ID now to limit DB queries on signup
         // and use uuid/v4 as a more unique ID that isn't reverse engineerable
         payload.userId = uuid();
         payload.accounts = [uuid()];

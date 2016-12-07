@@ -59,6 +59,51 @@ class Users extends MongoModels {
         });
     }
 
+    static login(email, password, cb) {
+        const loginFunctions = [
+            this.getUserByEmail(email)
+        ];
+
+        Promise.all(loginFunctions).then((values) => {
+            const user = values[0];
+            this.passwordCompare(password, user.password).then((validatedUser) => {
+                if (validatedUser) {
+                    const usr = user;
+                    // don't return hashed password back to client
+                    delete usr.password;
+                    return cb(usr);
+                }
+                return cb(Boom.unauthorized('Email and password do not match'));
+            }).catch((err) => {
+                return cb(err);
+            });
+        }).catch((err) => {
+            return cb(err);
+        });
+    }
+
+    static getUserByEmail(email) {
+        return new Promise((resolve, reject) => {
+            this.findOne({ email }, (err, user) => {
+                if (err) { throw new Error(err); }
+
+                if (user) {
+                    return resolve(user);
+                }
+
+                return reject(Boom.notFound('Email address not found'));
+            });
+        });
+    }
+
+    static passwordCompare(pass1, pass2) {
+        return new Promise((resolve) => {
+            return bcrypt.compare(pass1, pass2).then((match) => {
+                resolve(match);
+            });
+        });
+    }
+
     static passwordHash(password) {
         return new Promise((resolve) => {
             return bcrypt.hash(password, 10).then((hash) => {
