@@ -5,6 +5,8 @@ const redisClient = require('redis-connection')();
 const userActions = require('../actions/users');
 const uuid = require('uuid/v4');
 
+const jwtSecret = process.env.JWT_SECRET;
+
 module.exports = {
     new: (request, reply) => {
         const email = request.payload.email;
@@ -21,10 +23,23 @@ module.exports = {
             redisClient.set(session.id, JSON.stringify(session));
 
             // sign the session as a JWT
-            const token = JWT.sign(session, process.env.JWT_SECRET);
+            const token = JWT.sign(session, jwtSecret);
             usr.sessionToken = token;
 
             reply(usr);
+        });
+    },
+    destroy: (request, reply) => {
+        // implement your own login/auth function here
+        const decoded = JWT.decode(request.headers.authorization, jwtSecret);
+        let session = {};
+        redisClient.get(decoded.id, (rediserror, redisreply) => {
+            session = JSON.parse(redisreply);
+            session.valid = false;
+            session.ended = moment(moment()).unix();
+            redisClient.set(session.id, JSON.stringify(session));
+
+            reply({ session: 'destroyed' });
         });
     }
 };

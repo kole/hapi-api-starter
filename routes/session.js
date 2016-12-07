@@ -10,5 +10,12 @@ module.exports = [
             handler: Handler.new,
             validate: Validation.login
         }
+    },
+    {
+        method: ['GET', 'POST'],
+        path: '/session/destroy',
+        config: {
+            handler: Handler.destroy
+        }
     }
 ];
