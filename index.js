@@ -36,18 +36,16 @@ server.connection({
     port: 9090
 });
 
-server.register([globalAuth, userAuth, MongoModels], (err) => {
+server.register([userAuth, MongoModels], (err) => {
     if (err) { throw new Error(err); }
 
-    server.auth.strategy('global', 'global');
-    server.auth.strategy('user', 'user');
-    server.auth.default({
-        strategies: ['global', 'user']
-    });
-
+    server.auth.strategy('user', 'user', true);
 
     // load array of routes
     server.route(Routes);
+
+    // process all requests to confirm API access (different than user authentication)
+    server.ext('onPreAuth', globalAuth);
 
     // start the server
     server.start((e) => {

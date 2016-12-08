@@ -6,7 +6,7 @@ module.exports = [
         method: 'POST',
         path: '/signup',
         config: {
-            auth: 'global',
+            auth: false,
             handler: Handler.signup,
             validate: Validation.signup
         }

@@ -32,6 +32,8 @@ internals.implementation = () => {
                     return reply(Boom.badRequest(rediserror));
                 }
 
+                console.log(result);
+
                 if (!result) {
                     return reply(Boom.unauthorized('Please log in to access this resource'));
                 }
