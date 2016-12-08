@@ -8,8 +8,10 @@ if (process.env.NODE_ENV === 'development') {
     env.config();
 }
 
+const globalAuth = require('./auth/global');
 const Hapi = require('hapi');
 const HapiMongoModels = require('hapi-mongo-models');
+const userAuth = require('./auth/users');
 
 const Routes = require('./routes');
 
@@ -34,8 +36,15 @@ server.connection({
     port: 9090
 });
 
-server.register([MongoModels], (err) => {
+server.register([globalAuth, userAuth, MongoModels], (err) => {
     if (err) { throw new Error(err); }
+
+    server.auth.strategy('global', 'global');
+    server.auth.strategy('user', 'user');
+    server.auth.default({
+        strategies: ['global', 'user']
+    });
+
 
     // load array of routes
     server.route(Routes);

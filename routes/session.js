@@ -6,7 +6,7 @@ module.exports = [
         method: 'POST',
         path: '/session',
         config: {
-            auth: false,
+            auth: 'global',
             handler: Handler.new,
             validate: Validation.login
         }
