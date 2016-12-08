@@ -4,7 +4,7 @@ const Validation = require('../validation/users');
 module.exports = [
     {
         method: 'POST',
-        path: '/session/new',
+        path: '/session',
         config: {
             auth: false,
             handler: Handler.new,
@@ -12,8 +12,8 @@ module.exports = [
         }
     },
     {
-        method: ['DELETE', 'GET', 'POST'],
-        path: '/session/destroy',
+        method: 'DELETE',
+        path: '/session',
         config: {
             handler: Handler.destroy
         }
