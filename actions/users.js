@@ -1,3 +1,5 @@
+const _async = require('asyncawait/async');
+const _await = require('asyncawait/await');
 const bcrypt = require('bcrypt');
 const Boom = require('boom');
 const moment = require('moment');
@@ -7,12 +9,15 @@ class Users extends MongoModels {
     // as part of signup, create a new user in the database
     static create(user, cb) {
         const usr = user;
+
+        // asyncronous actions (happen in parallel)
         const signupFunctions = [
             this.usernameCheck(usr.username),
             this.emailCheck(usr.email),
             this.passwordHash(usr.password)
         ];
 
+        // promise is processed once all signup functions resolve
         Promise.all(signupFunctions).then((done) => {
             const password = done[2];
             this.insertUser(usr, password).then((userObj) => {
@@ -24,6 +29,7 @@ class Users extends MongoModels {
     }
 
     static emailCheck(email) {
+        // confirm that the email is not already in the db
         return new Promise((resolve, reject) => {
             this.findOne({ email }, (err, result) => {
                 if (result) {
@@ -35,6 +41,7 @@ class Users extends MongoModels {
     }
 
     static insertUser(user, password) {
+        // insert new user in database
         return new Promise((resolve, reject) => {
             // prep doc for insertion
             const doc = Object.assign(user, {
@@ -60,26 +67,24 @@ class Users extends MongoModels {
     }
 
     static login(email, password, cb) {
-        const loginFunctions = [
-            this.getUserByEmail(email)
-        ];
+        // use async/await for easy waterfall control flow
+        (_async(() => {
+            let user = _await(this.getUserByEmail(email));
 
-        Promise.all(loginFunctions).then((values) => {
-            const user = values[0];
-            this.passwordCompare(password, user.password).then((validatedUser) => {
-                if (validatedUser) {
-                    const usr = user;
-                    // don't return hashed password back to client
-                    delete usr.password;
-                    return cb(usr);
-                }
-                return cb(Boom.unauthorized('Email and password do not match'));
-            }).catch((err) => {
-                return cb(err);
-            });
-        }).catch((err) => {
-            return cb(err);
-        });
+            // make sure password matches what's in db
+            try {
+                _await(this.passwordCompare(password, user.password));
+            } catch (err) { return cb(err); }
+
+            // update last_seen_date on user object
+            try {
+                user = _await(this.updateLastSeen(user._id));
+            } catch (err) { return cb(err); }
+
+            // don't return password to the client
+            delete user.password;
+            return cb(user);
+        }))();
     }
 
     static getUserByEmail(email) {
@@ -97,14 +102,20 @@ class Users extends MongoModels {
     }
 
     static passwordCompare(pass1, pass2) {
-        return new Promise((resolve) => {
+        // does password in payload match what's on record in the database?
+        return new Promise((resolve, reject) => {
             return bcrypt.compare(pass1, pass2).then((match) => {
-                resolve(match);
+                // 'match' is a bool
+                if (match) {
+                    return resolve(match);
+                }
+                return reject(Boom.unauthorized('Incorrect password'));
             });
         });
     }
 
     static passwordHash(password) {
+        // bcrypt the password string for safe storage
         return new Promise((resolve) => {
             return bcrypt.hash(password, 10).then((hash) => {
                 resolve(hash);
@@ -112,7 +123,30 @@ class Users extends MongoModels {
         });
     }
 
+    static updateLastSeen(userId) {
+        // update stored user object with last login date in unix format
+        const query = {
+            _id: userId
+        };
+        const update = {
+            $set: {
+                last_seen_date: moment(moment()).unix()
+            }
+        };
+        return new Promise((resolve, reject) => {
+            this.findOneAndUpdate(query, update, (err, updatedUser) => {
+                if (err) { throw new Error(err); }
+
+                if (updatedUser._id) {
+                    return resolve(updatedUser);
+                }
+                return reject(Boom.badRequest(err));
+            });
+        });
+    }
+
     static usernameCheck(username) {
+        // make sure username is unique and not already used in database
         return new Promise((resolve, reject) => {
             this.findOne({ username }, (err, result) => {
                 if (result) {

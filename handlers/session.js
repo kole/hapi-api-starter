@@ -1,11 +1,6 @@
-const config = require('config');
-const JWT = require('jsonwebtoken');
-const moment = require('moment');
 const redisClient = require('redis-connection')();
 const userActions = require('../actions/users');
 const uuid = require('uuid/v4');
-
-const jwtSecret = process.env.JWT_SECRET;
 
 module.exports = {
     new: (request, reply) => {
@@ -14,30 +9,25 @@ module.exports = {
 
         userActions.login(email, password, (userObj) => {
             const usr = userObj;
-            const session = {
-                valid: true,
-                id: uuid(),
-                exp: moment(moment()).add(config.get('session_length_in_minutes'), 'minutes').unix()
-            };
-            // create the session in Redis
-            redisClient.set(session.id, JSON.stringify(session));
 
-            // sign the session as a JWT
-            const token = JWT.sign(session, jwtSecret);
-            usr.sessionToken = token;
+            // make sure we are working with a user object...
+            // errors and such will not have a '_id' key
+            if (usr._id) {
+                const sessionId = uuid();
 
-            reply(usr);
+                // create the session in Redis
+                redisClient.set(sessionId, usr._id);
+
+                // add session ID to user object
+                usr.session = sessionId;
+            }
+            // send updated user object to client
+            return reply(usr);
         });
     },
     destroy: (request, reply) => {
-        // implement your own login/auth function here
-        const decoded = JWT.decode(request.headers.authorization, jwtSecret);
-        let session = {};
-        redisClient.get(decoded.id, (rediserror, redisreply) => {
-            session = JSON.parse(redisreply);
-            redisClient.del(session.id);
-
-            reply({ status: 'success' });
-        });
+        const sessionId = request.headers.authorization;
+        redisClient.del(sessionId);
+        reply({ status: 'success' });
     }
 };
