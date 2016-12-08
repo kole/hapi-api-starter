@@ -12,7 +12,7 @@ module.exports = [
         }
     },
     {
-        method: ['GET', 'POST'],
+        method: ['DELETE', 'GET', 'POST'],
         path: '/session/destroy',
         config: {
             handler: Handler.destroy

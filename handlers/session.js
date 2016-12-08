@@ -17,7 +17,7 @@ module.exports = {
             const session = {
                 valid: true,
                 id: uuid(),
-                exp: moment(moment()).add('minutes', config.get('session_length_in_minutes')).unix()
+                exp: moment(moment()).add(config.get('session_length_in_minutes'), 'minutes').unix()
             };
             // create the session in Redis
             redisClient.set(session.id, JSON.stringify(session));
@@ -35,11 +35,9 @@ module.exports = {
         let session = {};
         redisClient.get(decoded.id, (rediserror, redisreply) => {
             session = JSON.parse(redisreply);
-            session.valid = false;
-            session.ended = moment(moment()).unix();
-            redisClient.set(session.id, JSON.stringify(session));
+            redisClient.del(session.id);
 
-            reply({ session: 'destroyed' });
+            reply({ status: 'success' });
         });
     }
 };
