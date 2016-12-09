@@ -2,6 +2,7 @@
 // authenticated access to protected routes
 
 const Boom = require('boom');
+const config = require('config');
 const redisClient = require('redis-connection')();
 
 // Declare internals
@@ -32,11 +33,12 @@ internals.implementation = () => {
                     return reply(Boom.badRequest(rediserror));
                 }
 
-                console.log(result);
-
                 if (!result) {
                     return reply(Boom.unauthorized('Please log in to access this resource'));
                 }
+
+                // refresh session exp
+                redisClient.expire(authorization, config.get('session_length_in_seconds'));
 
                 return reply.continue({ credentials: authorization });
             });

@@ -1,3 +1,4 @@
+const config = require('config');
 const redisClient = require('redis-connection')();
 const userActions = require('../actions/users');
 const uuid = require('uuid/v4');
@@ -17,6 +18,7 @@ module.exports = {
 
                 // create the session in Redis
                 redisClient.set(sessionId, usr._id);
+                redisClient.expire(sessionId, config.get('session_length_in_seconds'));
 
                 // add session ID to user object
                 usr.session = sessionId;
