@@ -33,14 +33,21 @@ internals.implementation = () => {
                     return reply(Boom.badRequest(rediserror));
                 }
 
-                if (!result) {
+                const sess = JSON.parse(result);
+
+                if (!sess) {
                     return reply(Boom.unauthorized('Please log in to access this resource'));
                 }
 
                 // refresh session exp
                 redisClient.expire(authorization, config.get('redis_expire'));
 
-                return reply.continue({ credentials: authorization });
+                const credentials = {
+                    Authorization: authorization,
+                    scope: sess.role
+                };
+
+                return reply.continue({ credentials });
             });
         }
     };

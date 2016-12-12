@@ -6,8 +6,21 @@ module.exports = [
         method: 'GET',
         path: '/user/{id}',
         config: {
-            validate: Validation.getUser,
-            handler: Handler.getUser
+            auth: {
+                scope: ['admin', 'user']
+            },
+            handler: Handler.getUser,
+            validate: Validation.getUser
+        }
+    },
+    {
+        method: 'GET',
+        path: '/users',
+        config: {
+            auth: {
+                scope: 'admin'
+            },
+            handler: Handler.getUsersForAccount
         }
     }
 ];
