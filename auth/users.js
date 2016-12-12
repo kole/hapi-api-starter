@@ -38,7 +38,7 @@ internals.implementation = () => {
                 }
 
                 // refresh session exp
-                redisClient.expire(authorization, config.get('session_length_in_seconds'));
+                redisClient.expire(authorization, config.get('redis_expire'));
 
                 return reply.continue({ credentials: authorization });
             });

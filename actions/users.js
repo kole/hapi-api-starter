@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const Boom = require('boom');
 const moment = require('moment');
 const MongoModels = require('mongo-models');
+const sessionActions = require('./sessions');
 
 class Users extends MongoModels {
     // as part of signup, create a new user in the database
@@ -47,7 +48,8 @@ class Users extends MongoModels {
             const doc = Object.assign(user, {
                 _id: user.userId,
                 password,
-                createdAt: moment(moment()).unix()
+                createdAt: moment(moment()).unix(),
+                role: 'admin'
             });
 
             // userId was moved to '_id', so we don't need it here anymore
@@ -69,16 +71,27 @@ class Users extends MongoModels {
     static login(email, password, cb) {
         // use async/await for easy waterfall control flow
         (_async(() => {
-            let user = _await(this.getUserByEmail(email));
+            let user = {};
+            let sessId = '';
+
+            // pull user out of db by email
+            try {
+                user = _await(this.getUserByEmail(email));
+            } catch (err) { return cb(err); }
 
             // make sure password matches what's in db
             try {
                 _await(this.passwordCompare(password, user.password));
             } catch (err) { return cb(err); }
 
-            // update last_seen_date on user object
+            // create session
             try {
-                user = _await(this.updateLastSeen(user._id));
+                sessId = _await(sessionActions.create(user));
+            } catch (err) { return cb(err); }
+
+            // update last_seen_date and sessionID on user object in db
+            try {
+                user = _await(this.updateLastSeenAndSession(user._id, sessId));
             } catch (err) { return cb(err); }
 
             // don't return password to the client
@@ -123,24 +136,26 @@ class Users extends MongoModels {
         });
     }
 
-    static updateLastSeen(userId) {
+    static updateLastSeenAndSession(userId, sessId) {
         // update stored user object with last login date in unix format
         const query = {
             _id: userId
         };
         const update = {
             $set: {
-                last_seen_date: moment(moment()).unix()
+                last_seen_date: moment(moment()).unix(),
+                sid: sessId
             }
         };
         return new Promise((resolve, reject) => {
-            this.findOneAndUpdate(query, update, (err, updatedUser) => {
+            // return the original user object so the
+            // previous last_seen_date can be compared to the current date
+            this.findOneAndUpdate(query, update, { returnOriginal: true }, (err, userUpdated) => {
                 if (err) { throw new Error(err); }
-
-                if (updatedUser._id) {
-                    return resolve(updatedUser);
+                if (userUpdated._id) {
+                    return resolve(userUpdated);
                 }
-                return reject(Boom.badRequest(err));
+                return reject(Boom.badRequest('Database Error'));
             });
         });
     }
@@ -159,7 +174,8 @@ class Users extends MongoModels {
 }
 
 Users.indexes = [
-    { key: { _id: 1 } }
+    { key: { _id: 1 } },
+    { key: { email: 1 } }
 ];
 
 Users.collection = 'Users';

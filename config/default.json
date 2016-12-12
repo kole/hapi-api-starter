@@ -1,3 +1,8 @@
+/*
+    24 hours = 86,400 seconds
+    1 week = 604,800 seconds
+*/
 {
+    "redis_expire": 604800,
     "session_length_in_seconds": 86400
 }
