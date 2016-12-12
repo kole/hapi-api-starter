@@ -1,5 +1,5 @@
-const redisClient = require('redis-connection')();
 const userActions = require('../actions/users');
+const sessionActions = require('../actions/sessions');
 
 module.exports = {
     new: (request, reply) => {
@@ -12,7 +12,8 @@ module.exports = {
     },
     destroy: (request, reply) => {
         const sessionId = request.headers.authorization;
-        redisClient.del(sessionId);
-        reply({ status: 'success' });
+        sessionActions.destroy(sessionId, (result) => {
+            return reply(result);
+        });
     }
 };

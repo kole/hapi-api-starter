@@ -20,6 +20,10 @@ const createSession = (usr, cb) => {
 };
 
 module.exports = {
+    destroy: (sessionId, cb) => {
+        redisClient.del(sessionId);
+        return cb({ status: 'success' });
+    },
     validate: (usr) => {
         const redisExp = config.get('redis_expire');
         return new Promise((resolve, reject) => {
