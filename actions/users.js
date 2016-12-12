@@ -84,9 +84,9 @@ class Users extends MongoModels {
                 _await(this.passwordCompare(password, user.password));
             } catch (err) { return cb(err); }
 
-            // create session
+            // handle session create/update logic
             try {
-                sessId = _await(sessionActions.create(user));
+                sessId = _await(sessionActions.validate(user));
             } catch (err) { return cb(err); }
 
             // update last_seen_date and sessionID on user object in db
@@ -148,10 +148,9 @@ class Users extends MongoModels {
             }
         };
         return new Promise((resolve, reject) => {
-            // return the original user object so the
-            // previous last_seen_date can be compared to the current date
-            this.findOneAndUpdate(query, update, { returnOriginal: true }, (err, userUpdated) => {
+            this.findOneAndUpdate(query, update, (err, userUpdated) => {
                 if (err) { throw new Error(err); }
+
                 if (userUpdated._id) {
                     return resolve(userUpdated);
                 }
