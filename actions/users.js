@@ -112,6 +112,23 @@ export default class Users extends MongoModels {
         });
     }
 
+    static getUserById(id) {
+        const _id = id;
+        return new Promise((resolve, reject) => {
+            this.findOne({ _id }, (err, user) => {
+                if (err) { return reject(Boom.badRequest(err)); }
+
+                if (user) {
+                    const usr = user;
+                    delete usr.password;
+                    return resolve(usr);
+                }
+
+                return reject(Boom.notFound('User not found'));
+            });
+        });
+    }
+
     static passwordCompare(pass1, pass2) {
         // does password in payload match what's on record in the database?
         return new Promise((resolve, reject) => {

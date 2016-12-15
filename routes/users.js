@@ -4,13 +4,13 @@ import Validation from '../validation/users';
 export default [
     {
         method: 'GET',
-        path: '/user/{id}',
+        path: '/users/{id}',
         config: {
             auth: {
                 scope: ['admin', 'user']
             },
-            handler: Handler.getUser,
-            validate: Validation.getUser
+            handler: Handler.getUserById,
+            validate: Validation.getUserById
         }
     },
     {
