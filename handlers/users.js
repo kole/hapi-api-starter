@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     getUser: (request, reply) => {
         reply('get user');
     },

@@ -1,9 +1,11 @@
 // user authentication will allow users (regardless of client)
 // authenticated access to protected routes
 
-const Boom = require('boom');
-const config = require('config');
-const redisClient = require('redis-connection')();
+import Boom from 'boom';
+import config from 'config';
+import redisClientModule from 'redis-connection';
+
+const redisClient = redisClientModule();
 
 // Declare internals
 const internals = {};

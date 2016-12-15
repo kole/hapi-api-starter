@@ -1,7 +1,7 @@
-const Validation = require('../validation/users');
-const Handler = require('../handlers/users');
+import Handler from '../handlers/users';
+import Validation from '../validation/users';
 
-module.exports = [
+export default [
     {
         method: 'GET',
         path: '/user/{id}',

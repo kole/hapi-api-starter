@@ -1,7 +1,7 @@
-const moment = require('moment');
-const MongoModels = require('mongo-models');
+import moment from 'moment';
+import MongoModels from 'mongo-models';
 
-class Accounts extends MongoModels {
+export default class Accounts extends MongoModels {
     // create a new account document in the database
     static create(user, cb) {
         const usr = user;
@@ -26,4 +26,3 @@ Accounts.indexes = [
 ];
 
 Accounts.collection = 'Accounts';
-module.exports = Accounts;

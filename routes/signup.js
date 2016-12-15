@@ -1,7 +1,7 @@
-const Validation = require('../validation/signup');
-const Handler = require('../handlers/signup');
+import Handler from '../handlers/signup';
+import Validation from '../validation/signup';
 
-module.exports = [
+export default [
     {
         method: 'POST',
         path: '/signup',

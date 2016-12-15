@@ -1,8 +1,8 @@
-const accountActions = require('../actions/accounts');
-const userActions = require('../actions/users');
-const uuid = require('uuid/v4');
+import uuid from 'uuid/v4';
+import accountActions from '../actions/accounts';
+import userActions from '../actions/users';
 
-module.exports = {
+export default {
     signup: (request, reply) => {
         const payload = request.payload;
 

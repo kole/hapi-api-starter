@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
-module.exports = {
+export default {
     signup: {
         payload: {
             email: Joi.string().email({ minDomainAtoms: 2 }).max(100).trim().required(),

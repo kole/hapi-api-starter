@@ -1,3 +1,10 @@
+import Hapi from 'hapi';
+import HapiMongoModels from 'hapi-mongo-models';
+import globalAuth from './auth/global';
+import userAuth from './auth/users';
+
+import Routes from './routes';
+
 // instatiate global var dependencies
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -7,13 +14,6 @@ if (process.env.NODE_ENV === 'development') {
     const env = require('dotenv');
     env.config();
 }
-
-const globalAuth = require('./auth/global');
-const Hapi = require('hapi');
-const HapiMongoModels = require('hapi-mongo-models');
-const userAuth = require('./auth/users');
-
-const Routes = require('./routes');
 
 // Configure hapi-mongo-models
 const MongoModels = {

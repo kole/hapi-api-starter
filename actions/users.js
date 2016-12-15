@@ -1,12 +1,10 @@
-const _async = require('asyncawait/async');
-const _await = require('asyncawait/await');
-const bcrypt = require('bcrypt');
-const Boom = require('boom');
-const moment = require('moment');
-const MongoModels = require('mongo-models');
-const sessionActions = require('./sessions');
+import bcrypt from 'bcrypt';
+import Boom from 'boom';
+import moment from 'moment';
+import MongoModels from 'mongo-models';
+import sessionActions from './sessions';
 
-class Users extends MongoModels {
+export default class Users extends MongoModels {
     // as part of signup, create a new user in the database
     static create(user, cb) {
         const usr = user;
@@ -70,34 +68,34 @@ class Users extends MongoModels {
 
     static login(email, password, cb) {
         // use async/await for easy waterfall control flow
-        (_async(() => {
+        (async () => {
             let user = {};
             let sessId = '';
 
             // pull user out of db by email
             try {
-                user = _await(this.getUserByEmail(email));
+                user = await this.getUserByEmail(email);
             } catch (err) { return cb(err); }
 
             // make sure password matches what's in db
             try {
-                _await(this.passwordCompare(password, user.password));
+                await this.passwordCompare(password, user.password);
             } catch (err) { return cb(err); }
 
             // handle session create/update logic
             try {
-                sessId = _await(sessionActions.validate(user));
+                sessId = await sessionActions.validate(user);
             } catch (err) { return cb(err); }
 
             // update last_seen_date and sessionID on user object in db
             try {
-                user = _await(this.updateLastSeenAndSession(user._id, sessId));
+                user = await this.updateLastSeenAndSession(user._id, sessId);
             } catch (err) { return cb(err); }
 
             // don't return password to the client
             delete user.password;
             return cb(user);
-        }))();
+        })();
     }
 
     static getUserByEmail(email) {
@@ -178,5 +176,3 @@ Users.indexes = [
 ];
 
 Users.collection = 'Users';
-
-module.exports = Users;

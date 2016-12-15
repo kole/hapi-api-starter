@@ -1,7 +1,7 @@
-const Handler = require('../handlers/session');
-const Validation = require('../validation/users');
+import Handler from '../handlers/session';
+import Validation from '../validation/users';
 
-module.exports = [
+export default [
     {
         method: 'POST',
         path: '/session',

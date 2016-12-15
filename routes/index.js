@@ -8,8 +8,8 @@ const routesArr = [];
 
 files.map((file) => {
     // eslint-disable-next-line
-    const routes = require(`./${file}`);
+    const routes = require(`./${file}`).default;
     return routes.map(oneRoute => routesArr.push(oneRoute));
 });
 
-module.exports = routesArr;
+export default routesArr;

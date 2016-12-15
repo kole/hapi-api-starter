@@ -1,7 +1,7 @@
-const userActions = require('../actions/users');
-const sessionActions = require('../actions/sessions');
+import userActions from '../actions/users';
+import sessionActions from '../actions/sessions';
 
-module.exports = {
+export default {
     new: (request, reply) => {
         const email = request.payload.email;
         const password = request.payload.password;

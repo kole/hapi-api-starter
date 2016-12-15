@@ -1,8 +1,10 @@
-const Boom = require('boom');
-const config = require('config');
-const moment = require('moment');
-const redisClient = require('redis-connection')();
-const uuid = require('uuid/v4');
+import Boom from 'boom';
+import config from 'config';
+import moment from 'moment';
+import redisClientModule from 'redis-connection';
+import uuid from 'uuid/v4';
+
+const redisClient = redisClientModule();
 
 const createSession = (usr, cb) => {
     const redisExp = config.get('redis_expire');
@@ -19,7 +21,7 @@ const createSession = (usr, cb) => {
     return cb(sessionId);
 };
 
-module.exports = {
+export default {
     destroy: (sessionId, cb) => {
         redisClient.del(sessionId);
         return cb({ status: 'success' });
@@ -27,6 +29,13 @@ module.exports = {
     validate: (usr) => {
         const redisExp = config.get('redis_expire');
         return new Promise((resolve, reject) => {
+            if (!usr.sid) {
+                // no old session, create a new one
+                return createSession(usr, (result) => {
+                    return resolve(result);
+                });
+            }
+
             return redisClient.get(usr.sid, (err, oldSid) => {
                 if (err) { return reject(Boom.badRequest(err)); }
 
