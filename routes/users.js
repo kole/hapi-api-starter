@@ -15,6 +15,17 @@ export default [
     },
     {
         method: 'GET',
+        path: '/users/self',
+        config: {
+            auth: {
+                scope: ['admin', 'user', 'guest']
+            },
+            handler: Handler.getSelf,
+            validate: Validation.getUserById
+        }
+    },
+    {
+        method: 'GET',
         path: '/users',
         config: {
             auth: {

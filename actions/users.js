@@ -98,6 +98,24 @@ export default class Users extends MongoModels {
         })();
     }
 
+    static getSelf(sessId) {
+        let userId = '';
+        let user = {};
+        return new Promise((resolve, reject) => {
+            (async () => {
+                try {
+                    userId = await sessionActions.getSelfId(sessId);
+                } catch (err) { return reject(err); }
+
+                try {
+                    user = await this.getUserById(userId);
+                } catch (err) { return reject(err); }
+
+                return resolve(user);
+            })();
+        });
+    }
+
     static getUserByEmail(email) {
         return new Promise((resolve, reject) => {
             this.findOne({ email }, (err, user) => {

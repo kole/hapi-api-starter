@@ -26,6 +26,19 @@ export default {
         redisClient.del(sessionId);
         return cb({ status: 'success' });
     },
+    getSelfId: (sessId) => {
+        return new Promise((resolve, reject) => {
+            return redisClient.get(sessId, (err, user) => {
+                if (err) { return reject(Boom.badRequest(err)); }
+                if (!user) {
+                    return reject(Boom.notFound('User ID not found in session'));
+                }
+                const usr = JSON.parse(user);
+                const userId = usr.uid;
+                return resolve(userId);
+            });
+        });
+    },
     validate: (usr) => {
         const redisExp = config.get('redis_expire');
         return new Promise((resolve, reject) => {
