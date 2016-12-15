@@ -30,16 +30,16 @@
     "config": "^1.24.0",
     "hapi": "16.0.1",
     "hapi-mongo-models": "6.0.0",
-    "joi": "^10.0.5",
+    "joi": "^10.0.6",
     "mongo-models": "1.1.0",
-    "mongodb": "2.2.12",
+    "mongodb": "2.2.16",
     "redis-connection": "^5.0.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "dotenv": "^2.0.0",
-    "eslint": "^3.11.1",
+    "eslint": "^3.12.2",
     "eslint-plugin-import": "^2.2.0",
     "nodemon": "^1.11.0"
   }
