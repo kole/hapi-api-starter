@@ -1,8 +1,13 @@
-import bcrypt from 'bcrypt';
 import Boom from 'boom';
 import moment from 'moment';
 import MongoModels from 'mongo-models';
 import sessionActions from './sessions';
+
+// import user methods
+import comparePasswords from './users/comparePasswords';
+import hashPassword from './users/hashPassword';
+import uniqueEmailCheck from './users/uniqueEmailCheck';
+import uniqueUsernameCheck from './users/uniqueUsernameCheck';
 
 export default class Users extends MongoModels {
     // as part of signup, create a new user in the database
@@ -11,9 +16,9 @@ export default class Users extends MongoModels {
 
         // asyncronous actions (happen in parallel)
         const signupFunctions = [
-            this.usernameCheck(usr.username),
-            this.emailCheck(usr.email),
-            this.passwordHash(usr.password)
+            uniqueUsernameCheck(this, usr.username),
+            uniqueEmailCheck(this, usr.email),
+            hashPassword(usr.password)
         ];
 
         // promise is processed once all signup functions resolve
@@ -24,18 +29,6 @@ export default class Users extends MongoModels {
             });
         }).catch((err) => {
             return cb(err);
-        });
-    }
-
-    static emailCheck(email) {
-        // confirm that the email is not already in the db
-        return new Promise((resolve, reject) => {
-            this.findOne({ email }, (err, result) => {
-                if (result) {
-                    return reject(Boom.conflict('Email is already in use'));
-                }
-                return resolve(result);
-            });
         });
     }
 
@@ -79,7 +72,7 @@ export default class Users extends MongoModels {
 
             // make sure password matches what's in db
             try {
-                await this.passwordCompare(password, user.password);
+                await comparePasswords(password, user.password);
             } catch (err) { return cb(err); }
 
             // handle session create/update logic
@@ -147,28 +140,6 @@ export default class Users extends MongoModels {
         });
     }
 
-    static passwordCompare(pass1, pass2) {
-        // does password in payload match what's on record in the database?
-        return new Promise((resolve, reject) => {
-            return bcrypt.compare(pass1, pass2).then((match) => {
-                // 'match' is a bool
-                if (match) {
-                    return resolve(match);
-                }
-                return reject(Boom.unauthorized('Incorrect password'));
-            });
-        });
-    }
-
-    static passwordHash(password) {
-        // bcrypt the password string for safe storage
-        return new Promise((resolve) => {
-            return bcrypt.hash(password, 10).then((hash) => {
-                resolve(hash);
-            });
-        });
-    }
-
     static updateLastSeenAndSession(userId, sessId) {
         // update stored user object with last login date in unix format
         const query = {
@@ -188,18 +159,6 @@ export default class Users extends MongoModels {
                     return resolve(userUpdated);
                 }
                 return reject(Boom.badRequest('Database Error'));
-            });
-        });
-    }
-
-    static usernameCheck(username) {
-        // make sure username is unique and not already used in database
-        return new Promise((resolve, reject) => {
-            this.findOne({ username }, (err, result) => {
-                if (result) {
-                    return reject(Boom.conflict('Username is already in use'));
-                }
-                return resolve(result);
             });
         });
     }
