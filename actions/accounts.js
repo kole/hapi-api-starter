@@ -7,13 +7,13 @@ export default class Accounts extends MongoModels {
         const usr = user;
         // eslint-disable-next-line no-underscore-dangle
         const userId = [usr._id];
-        const document = {
+        const doc = {
             _id: user.accounts[0],
             createdAt: moment(moment()).unix(),
             users: userId
         };
 
-        this.insertOne(document, (err, result) => {
+        this.insertOne(doc, (err, result) => {
             if (err) { throw new Error(err); }
 
             return cb(result[0]);

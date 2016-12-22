@@ -25,7 +25,8 @@ const MongoModels = {
         autoIndex: true,
         models: {
             Accounts: './actions/accounts',
-            Users: './actions/users'
+            Users: './actions/users',
+            Invitations: './actions/invite'
         }
     }
 };
