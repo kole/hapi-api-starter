@@ -17,7 +17,8 @@ export default [
         method: 'DELETE',
         path: '/session',
         config: {
-            handler: Handler.destroy
+            handler: Handler.destroy,
+            response: { schema: Response.destroySession }
         }
     }
 ];

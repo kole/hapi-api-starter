@@ -1,4 +1,5 @@
 import Handler from '../handlers/users';
+import Response from '../responses/users';
 import Validation from '../validation/users';
 
 export default [
@@ -10,6 +11,7 @@ export default [
                 scope: ['admin', 'user']
             },
             handler: Handler.getUserById,
+            response: { schema: Response.getUserById },
             validate: Validation.getUserById
         }
     },
@@ -21,6 +23,7 @@ export default [
                 scope: ['admin', 'user', 'guest']
             },
             handler: Handler.getSelf,
+            response: { schema: Response.getUserById },
             validate: Validation.getUserById
         }
     },

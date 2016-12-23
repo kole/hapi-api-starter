@@ -2,7 +2,7 @@
 import Joi from 'joi';
 
 export default {
-    newSession: Joi.object(
+    getUserById: Joi.object(
         {
             _id: Joi.string().guid().required(),
             email: Joi.string().email({ minDomainAtoms: 2 }).max(100).trim().required(),
@@ -23,12 +23,7 @@ export default {
             createdAt: Joi.number().min(10).required(),
             last_seen_date: Joi.number().min(10),
             verified: Joi.boolean().required(),
-            sid: Joi.string()
+            sid: Joi.string().guid()
         }
-    ).label('Result'),
-    destroySession: Joi.object(
-        {
-            status: Joi.string().required()
-        }
-    )
+    ).label('Result')
 };
