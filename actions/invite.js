@@ -1,3 +1,4 @@
+import Boom from 'boom';
 import moment from 'moment';
 import MongoModels from 'mongo-models';
 import uuid from 'uuid/v4';
@@ -15,13 +16,17 @@ export default class Invitations extends MongoModels {
         this.insertOne(doc, (err, result) => {
             if (err) { throw new Error(err); }
 
-            return cb(result[0]);
+            if (!result[0]._id) {
+                return cb(Boom.badRequest('Database error'));
+            }
+
+            return cb({ status: 'pending' });
         });
     }
 }
 
 Invitations.indexes = [
-    { key: { _id: 1 } }
+    { key: { email: 1 } }
 ];
 
 Invitations.collection = 'Invitations';

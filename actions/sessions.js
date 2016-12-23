@@ -30,6 +30,19 @@ export default {
         redisClient.del(sessionId);
         return cb({ status: 'success' });
     },
+    getLoggedInAccount: (sessId) => {
+        return new Promise((resolve, reject) => {
+            return redisClient.get(sessId, (err, sess) => {
+                if (err) { return reject(Boom.badRequest(err)); }
+                if (!sess) {
+                    return reject(Boom.notFound('Session not found'));
+                }
+                const sesh = JSON.parse(sess);
+                const aid = sesh.aid;
+                return resolve(aid);
+            });
+        });
+    },
     getSelfId: (sessId) => {
         return new Promise((resolve, reject) => {
             return redisClient.get(sessId, (err, user) => {

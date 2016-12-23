@@ -5,13 +5,19 @@ import sessionActions from '../actions/sessions';
 export default {
     new: (request, reply) => {
         const payload = request.payload;
-        sessionActions.getSelfId(request.headers.authorization).then((userId) => {
-            if (!userId) { return reply(Boom.badRequest('Please log in to invite someone')); }
-            payload.invitedBy = userId;
+        const sessId = request.headers.authorization;
+        const inviteFunctions = [
+            sessionActions.getSelfId(sessId),
+            sessionActions.getLoggedInAccount(sessId)
+        ];
+
+        Promise.all(inviteFunctions).then((results) => {
+            payload.invitedBy = results[0];
+            payload.invitedTo = results[1];
 
             return inviteActions.create(payload, (invitation) => {
                 return reply(invitation);
             });
-        });
+        }).catch(err => reply(Boom.badRequest(err)));
     }
 };
