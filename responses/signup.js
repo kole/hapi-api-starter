@@ -2,7 +2,7 @@
 import Joi from 'joi';
 
 export default {
-    signiup: Joi.object(
+    signup: Joi.object(
         {
             _id: Joi.string().guid().required(),
             email: Joi.string().email({ minDomainAtoms: 2 }).max(100).trim().required(),

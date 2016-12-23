@@ -2,8 +2,8 @@ import Joi from 'joi';
 
 export default {
     invite: {
-        payload: {
+        payload: Joi.object({
             email: Joi.string().email({ minDomainAtoms: 2 }).max(100).trim().required()
-        }
+        })
     }
 };

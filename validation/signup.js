@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export default {
     signup: {
-        payload: {
+        payload: Joi.object({
             email: Joi.string().email({ minDomainAtoms: 2 }).max(100).trim().required(),
             password: Joi.string().min(8).max(100).trim().required(),
             username: Joi.string().max(30).trim(),
@@ -14,6 +14,6 @@ export default {
             state: Joi.string().max(2).trim(),
             zip: Joi.string().max(20).trim(),
             mobile: Joi.string().max(20).trim()
-        }
+        }).label('Payload')
     }
 };
