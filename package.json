@@ -41,6 +41,9 @@
     "dotenv": "^2.0.0",
     "eslint": "^3.12.2",
     "eslint-plugin-import": "^2.2.0",
-    "nodemon": "^1.11.0"
+    "hapi-swagger": "^7.5.0",
+    "inert": "^4.0.4",
+    "nodemon": "^1.11.0",
+    "vision": "^4.1.1"
   }
 }
