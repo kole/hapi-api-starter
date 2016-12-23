@@ -9,7 +9,9 @@ export default function insertUser(db, user, password) {
             _id: user.userId,
             password,
             createdAt: moment(moment()).unix(),
-            role: 'admin'
+            role: 'admin',
+            verified: false,
+            verifyToken: Math.random().toString().replace('.', '').substring(1, 5) // 4 digit verification code sent to signup email
         });
 
         // userId was moved to '_id', so we don't need it here anymore
@@ -19,6 +21,9 @@ export default function insertUser(db, user, password) {
             if (err) { return reject(Boom.badRequest('Database error')); }
 
             const userFromDB = result[0];
+
+            // ssshhh, the  user can't know this yet :P
+            delete userFromDB.verifyToken;
 
             // don't return the password to the requesting function
             delete userFromDB.password;

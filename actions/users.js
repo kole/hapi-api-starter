@@ -2,6 +2,7 @@ import MongoModels from 'mongo-models';
 import sessionActions from './sessions';
 
 // import user methods
+import checkVerified from './users/checkVerified';
 import comparePasswords from './users/comparePasswords';
 import hashPassword from './users/hashPassword';
 import getUserByEmail from './users/getUserByEmail';
@@ -45,6 +46,11 @@ export default class Users extends MongoModels {
             // pull user out of db by email
             try {
                 user = await getUserByEmail(this, email);
+            } catch (err) { return cb(err); }
+
+            // confirm user has verified their email address
+            try {
+                await checkVerified(user);
             } catch (err) { return cb(err); }
 
             // make sure password matches what's in db
