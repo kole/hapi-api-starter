@@ -1,4 +1,5 @@
 import Handler from '../handlers/session';
+import Response from '../responses/session';
 import Validation from '../validation/users';
 
 export default [
@@ -8,6 +9,7 @@ export default [
         config: {
             auth: false,
             handler: Handler.new,
+            response: { schema: Response.newSession },
             validate: Validation.login
         }
     },

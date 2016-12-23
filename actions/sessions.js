@@ -9,9 +9,13 @@ const redisClient = redisClientModule();
 const createSession = (usr, cb) => {
     const redisExp = config.get('redis_expire');
     const sessionId = uuid();
+
+    // get default login account
+    const acct = usr.accounts.filter(account => account.default)[0];
     const user = {
+        aid: acct.aid,
         uid: usr._id,
-        role: usr.role || 'guest' // (admin, user, guest)
+        role: acct.role
     };
 
     // create the session in Redis

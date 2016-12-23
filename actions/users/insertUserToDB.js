@@ -9,7 +9,6 @@ export default function insertUser(db, user, password) {
             _id: user.userId,
             password,
             createdAt: moment(moment()).unix(),
-            role: 'admin',
             verified: false,
             verifyToken: Math.random().toString().replace('.', '').substring(1, 5) // 4 digit verification code sent to signup email
         });

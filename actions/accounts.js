@@ -8,7 +8,7 @@ export default class Accounts extends MongoModels {
         // eslint-disable-next-line no-underscore-dangle
         const userId = [usr._id];
         const doc = {
-            _id: user.accounts[0],
+            _id: user.accounts[0].aid,
             createdAt: moment(moment()).unix(),
             users: userId
         };
