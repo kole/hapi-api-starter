@@ -30,7 +30,7 @@
     "config": "^1.24.0",
     "hapi": "16.0.2",
     "hapi-mongo-models": "6.0.0",
-    "joi": "^10.0.6",
+    "joi": "^10.1.0",
     "mongo-models": "1.1.0",
     "mongodb": "2.2.16",
     "redis-connection": "^5.0.0",
