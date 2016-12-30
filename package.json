@@ -29,7 +29,7 @@
     "boom": "^4.2.0",
     "config": "^1.24.0",
     "handlebars": "^4.0.6",
-    "hapi": "16.0.2",
+    "hapi": "16.1.0",
     "hapi-mongo-models": "6.0.0",
     "joi": "^10.1.0",
     "mongo-models": "1.1.0",
@@ -45,7 +45,7 @@
     "eslint": "^3.12.2",
     "eslint-plugin-import": "^2.2.0",
     "hapi-swagger": "^7.5.0",
-    "inert": "^4.0.4",
+    "inert": "^4.1.0",
     "nodemon": "^1.11.0",
     "vision": "^4.1.1"
   }
