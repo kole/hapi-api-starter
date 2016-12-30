@@ -3,6 +3,8 @@
     1 week = 604,800 seconds
 */
 {
+    "company_email": "hello@weelabs.io",
+    "company_name": "WeeLabs",
     "redis_expire": 604800,
     "session_length_in_seconds": 86400
 }

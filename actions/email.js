@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Boom from 'boom';
+import config from 'config';
 import handlebars from 'handlebars';
 import mailer from 'sendgrid-mailer';
 
@@ -26,13 +27,26 @@ const emailTemplate = (templateName) => {
     });
 };
 
+const fromAddr = `${config.get('company_name')} <${config.get('company_email')}>`;
+const toAddr = (usr) => {
+    if (usr.fname && usr.lname) {
+        return `${usr.fname} ${usr.lname} <${usr.email}>`;
+    }
+
+    if (usr.fname) {
+        return `${usr.fname} <${usr.email}>`;
+    }
+
+    return usr.email;
+};
+
 export default {
     sendWelcome: (user) => {
         emailTemplate('welcome').then((result) => {
             const email = {
-                to: 'me@nickolas.io',
-                from: 'hello@weelabs.io',
-                subject: 'Hello world',
+                to: toAddr(user),
+                from: fromAddr,
+                subject: `Welcome to ${config.get('company_name')}!`,
                 html: result
             };
 
