@@ -7,21 +7,25 @@ import mailer from 'sendgrid-mailer';
 
 mailer.config(process.env.SENDGRID_API_KEY);
 
-// this will be called after the file is read
 function renderToString(source, data) {
     const template = handlebars.compile(source);
     const outputString = template(data);
     return outputString;
 }
 
-const emailTemplate = (templateName) => {
+const emailTemplate = (templateName, userData) => {
+    const companyData = {
+        company_name: config.get('company_name'),
+        company_email: config.get('company_email')
+    };
+    const emailData = Object.assign(companyData, userData);
     return new Promise((resolve, reject) => {
         const template = path.join(__dirname, `../email/${templateName}.hbs`);
         fs.readFile(template, (err, data) => {
             if (err) { reject(Boom.badRequest('Error sending email')); }
 
             const source = data.toString();
-            const renderedTemp = renderToString(source, {});
+            const renderedTemp = renderToString(source, emailData);
             return resolve(renderedTemp);
         });
     });
@@ -42,7 +46,7 @@ const toAddr = (usr) => {
 
 export default {
     sendWelcome: (user) => {
-        emailTemplate('welcome').then((result) => {
+        emailTemplate('welcome', user).then((result) => {
             const email = {
                 to: toAddr(user),
                 from: fromAddr,
