@@ -1,5 +1,6 @@
 import uuid from 'uuid/v4';
 import accountActions from '../actions/accounts';
+import emailActions from '../actions/email';
 import userActions from '../actions/users';
 
 export default {
@@ -23,6 +24,7 @@ export default {
 
             // create an account for the user
             return accountActions.create(user, () => {
+                emailActions.sendWelcome(user);
                 return reply(user);
             });
         });
