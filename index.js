@@ -28,8 +28,9 @@ const MongoModels = {
         autoIndex: true,
         models: {
             Accounts: './actions/accounts',
-            Users: './actions/users',
-            Invitations: './actions/invite'
+            Invitations: './actions/invite',
+            Passwords: './actions/password',
+            Users: './actions/users'
         }
     }
 };
