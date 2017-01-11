@@ -12,7 +12,7 @@ import Routes from './routes';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // run local dev configuration if env is development
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     // eslint-disable-next-line global-require
     const env = require('dotenv');
     env.config();
@@ -38,7 +38,7 @@ const MongoModels = {
 const server = new Hapi.Server();
 server.connection({
     host: 'localhost',
-    port: 9090
+    port: process.env.PORT || 9090
 });
 
 server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger], (err) => {
@@ -52,10 +52,17 @@ server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger], (err) => {
     // process all requests to confirm API access (different than user authentication)
     server.ext('onPreAuth', globalAuth);
 
-    // start the server
-    server.start((e) => {
-        if (e) { throw new Error(e); }
+    if (!module.parent.parent) {
+        // start the server
+        server.start((e) => {
+            if (e) { throw new Error(e); }
 
-        console.log(`Super hapi to be on port ${server.info.port} in ${process.env.NODE_ENV} mode on Node.js version ${process.versions.node}`);
-    });
+            console.log(`Super hapi to be on port ${server.info.port} in ${process.env.NODE_ENV} mode on Node.js version ${process.versions.node}`);
+        });
+    } else {
+        // used for kicking off tests
+        server.emit('start');
+    }
 });
+
+module.exports = server;
