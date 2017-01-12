@@ -1,3 +1,4 @@
+import Config from 'config';
 import Hapi from 'hapi';
 import Inert from 'inert';
 import HapiMongoModels from 'hapi-mongo-models';
@@ -16,6 +17,10 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     // eslint-disable-next-line global-require
     const env = require('dotenv');
     env.config();
+}
+
+if (process.env.NODE_ENV === 'test') {
+    process.env.API_AUTH = Config.get('API_AUTH');
 }
 
 // Configure hapi-mongo-models
