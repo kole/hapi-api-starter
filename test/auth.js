@@ -44,8 +44,8 @@ describe('The API requires client-based basic authentication - apart from user a
                 basic: basicAuth
             }
         }, (response) => {
-            // expect access to API to be granted, but payload valiation will fail
-            // hence the 400 response (not a 401)
+            // expect access to the API to be granted, but payload valiation will fail
+            // hence the 400 response (not a 401 or 200)
             expect(response.statusCode).to.equal(400);
             done();
         });
