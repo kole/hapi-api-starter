@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./entry.js",
-    "test": "NODE_ENV=test node node_modules/lab/bin/lab -v -L -C -D -c -t 50 -T test/config.js -I '__core-js_shared__'"
+    "test": "NODE_ENV=test node node_modules/lab/bin/lab"
   },
   "repository": {
     "type": "git",

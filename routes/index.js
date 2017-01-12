@@ -18,6 +18,7 @@ files.map((file) => {
         } else {
             rte.config.tags = ['api'];
         }
+
         return routesArr.push(rte);
     });
 });

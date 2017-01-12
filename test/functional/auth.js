@@ -9,7 +9,7 @@ const describe = lab.describe;
 const it = lab.it;
 // const after = lab.after;
 
-const server = require('../index.js');
+const server = require('../../index.js');
 
 // make sure the server fully loads before running tests
 lab.before((done) => {
