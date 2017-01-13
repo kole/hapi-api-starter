@@ -1,4 +1,3 @@
-// $lab:coverage:off$
 import Config from 'config';
 import Hapi from 'hapi';
 import Inert from 'inert';
@@ -72,4 +71,3 @@ server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger], (err) => {
 });
 
 module.exports = server;
-// $lab:coverage:on$

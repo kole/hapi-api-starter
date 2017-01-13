@@ -1,26 +1,16 @@
-const Code = require('code');
-const Lab = require('lab');
-
-const expect = Code.expect;
-const lab = exports.lab = Lab.script();
-
-const describe = lab.describe;
-const it = lab.it;
-
-const routesCompiler = require('../../../routes/index.js').default;
+import { expect } from 'chai';
+import routesCompiler from '../../../routes/index.js';
 
 describe('The route array compiler should return an array of routes given an array of filenames', () => {
     it('should return an array of valid route objects', (done) => {
-        expect(routesCompiler).to.be.an.array();
+        expect(routesCompiler).to.be.instanceOf(Array);
         expect(routesCompiler.length).to.be.above(0);
 
         for (let i = 0, len = routesCompiler.length; i < len; i++) {
             const route = routesCompiler[i];
-            expect(route).to.be.an.object();
-            expect(route.path).to.exist();
-            expect(route.method).to.exist();
-            expect(route.config).to.exist();
-            expect(route.config.tags).to.exist();
+            expect(route).to.be.instanceOf(Object);
+            expect(route).to.have.all.keys('path', 'method', 'config');
+            expect(route).to.have.deep.property('config.tags');
         }
         done();
     });
