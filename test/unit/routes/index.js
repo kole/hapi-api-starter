@@ -6,6 +6,7 @@ describe('The route array compiler should return an array of routes given an arr
         expect(routesCompiler).to.be.instanceOf(Array);
         expect(routesCompiler.length).to.be.above(0);
 
+        // loop through routes to make sure they all contain the basic components
         for (let i = 0, len = routesCompiler.length; i < len; i++) {
             const route = routesCompiler[i];
             expect(route).to.be.instanceOf(Object);
