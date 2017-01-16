@@ -31,7 +31,6 @@ export default class Passwords extends MongoModels {
             });
         }
 
-        console.log('last');
         return cb({ status: 'pending' });
     }
 }
