@@ -1,9 +1,12 @@
 import Boom from 'boom';
 
-export default function uniqueEmailCheck(db, email) {
+// get users model
+import UsersCollection from '../users';
+
+export default function uniqueEmailCheck(email) {
     // confirm that the email is not already in the db
     return new Promise((resolve, reject) => {
-        db.findOne({ email }, (err, result) => {
+        UsersCollection.findOne({ email }, (err, result) => {
             if (result) {
                 return reject(Boom.conflict('Email is already in use'));
             }

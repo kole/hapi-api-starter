@@ -45,7 +45,7 @@ export default class Users extends MongoModels {
 
             // pull user out of db by email
             try {
-                user = await getUserByEmail(this, email);
+                user = await getUserByEmail(email);
             } catch (err) { return cb(err); }
 
             // confirm user has verified their email address

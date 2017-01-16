@@ -1,9 +1,12 @@
 import Boom from 'boom';
 
-export default function getUserById(db, id) {
+// get users model
+import UsersCollection from '../users';
+
+export default function getUserById(id) {
     const _id = id;
     return new Promise((resolve, reject) => {
-        db.findOne({ _id }, (err, user) => {
+        UsersCollection.findOne({ _id }, (err, user) => {
             if (err) { return reject(Boom.badRequest(err)); }
 
             if (user) {

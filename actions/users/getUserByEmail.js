@@ -1,8 +1,11 @@
 import Boom from 'boom';
 
-export default function getUserByEmail(db, email) {
+// get users model
+import UsersCollection from '../users';
+
+export default function getUserByEmail(email) {
     return new Promise((resolve, reject) => {
-        db.findOne({ email }, (err, user) => {
+        UsersCollection.findOne({ email }, (err, user) => {
             if (err) { throw new Error(err); }
 
             if (user) {

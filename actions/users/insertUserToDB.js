@@ -1,7 +1,10 @@
 import Boom from 'boom';
 import moment from 'moment';
 
-export default function insertUser(db, user, password) {
+// get users model
+import UsersCollection from '../users';
+
+export default function insertUser(user, password) {
     // insert new user in database
     return new Promise((resolve, reject) => {
         // prep doc for insertion
@@ -16,7 +19,7 @@ export default function insertUser(db, user, password) {
         // userId was moved to '_id', so we don't need it here anymore
         delete doc.userId;
 
-        return db.insertOne(doc, (err, result) => {
+        return UsersCollection.insertOne(doc, (err, result) => {
             if (err) { return reject(Boom.badRequest('Database error')); }
 
             const userFromDB = result[0];
