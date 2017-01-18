@@ -3,9 +3,6 @@
 
 import Boom from 'boom';
 import config from 'config';
-import redisClientModule from 'redis-connection';
-
-const redisClient = redisClientModule();
 
 // Declare internals
 const internals = {};
@@ -30,7 +27,7 @@ internals.implementation = () => {
                 return reply(Boom.unauthorized('Please log in to access this resource'));
             }
 
-            return redisClient.get(authorization, (rediserror, result) => {
+            return request.redis.get(authorization, (rediserror, result) => {
                 if (rediserror) {
                     return reply(Boom.badRequest(rediserror));
                 }
@@ -42,7 +39,7 @@ internals.implementation = () => {
                 }
 
                 // refresh session exp
-                redisClient.expire(authorization, config.get('redis_expire'));
+                request.redis.expire(authorization, config.get('redis_expire'));
 
                 const credentials = {
                     Authorization: authorization,

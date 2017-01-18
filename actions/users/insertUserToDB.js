@@ -11,7 +11,7 @@ export default function insertUser(user, password) {
         const doc = Object.assign(user, {
             _id: user.userId,
             password,
-            createdAt: moment(moment()).unix(),
+            created_at: moment(moment()).unix(),
             verified: false,
             verifyToken: Math.random().toString().replace('.', '').substring(1, 5) // 4 digit verification code sent to signup email
         });

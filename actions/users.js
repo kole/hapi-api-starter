@@ -37,7 +37,7 @@ export default class Users extends MongoModels {
         });
     }
 
-    static login(email, password, cb) {
+    static login(request, email, password, cb) {
         // use async/await for easy waterfall control flow
         (async () => {
             let user = {};
@@ -60,12 +60,12 @@ export default class Users extends MongoModels {
 
             // handle session create/update logic
             try {
-                sessId = await sessionActions.validate(user);
+                sessId = await sessionActions.validate(request, user);
             } catch (err) { return cb(err); }
 
             // update last_seen_date and sessionID on user object in db
             try {
-                user = await updateLastSeenAndSession(this, user._id, sessId);
+                user = await updateLastSeenAndSession(user._id, sessId);
             } catch (err) { return cb(err); }
 
             // don't return password to the client
@@ -75,7 +75,7 @@ export default class Users extends MongoModels {
     }
 
     // expose method to handler
-    static getSelf(sessId) { return getSelf(this, sessId); }
+    static getSelf(request, sessId) { return getSelf(request, sessId); }
 
     // expose method to handler
     static getUserById(id) { return getUserById(this, id); }

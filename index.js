@@ -3,13 +3,14 @@ import Hapi from 'hapi';
 import Inert from 'inert';
 import HapiMongoModels from 'hapi-mongo-models';
 import HapiSwagger from 'hapi-swagger';
+import Redis from 'hapi-redis-connection';
 import Vision from 'vision';
 import globalAuth from './auth/global';
 import userAuth from './auth/users';
 
 import Routes from './routes';
 
-// instatiate global var dependencies
+// instantiate global var dependencies
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // run local dev configuration if env is development
@@ -46,7 +47,7 @@ server.connection({
     port: process.env.PORT || 9090
 });
 
-server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger], (err) => {
+server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger, Redis], (err) => {
     if (err) { throw new Error(err); }
 
     server.auth.strategy('user', 'user', true);

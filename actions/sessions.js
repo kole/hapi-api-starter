@@ -1,14 +1,11 @@
 import Boom from 'boom';
 import config from 'config';
 import moment from 'moment';
-import redisClientModule from 'redis-connection';
 import uuid from 'uuid/v4';
 
-const redisClient = redisClientModule();
-
-const createSession = (usr, cb) => {
+const createSession = (request, usr, cb) => {
     const redisExp = config.get('redis_expire');
-    const sessionId = uuid();
+    const sessId = uuid();
 
     // get default login account
     const acct = usr.accounts.filter(account => account.default)[0];
@@ -19,20 +16,20 @@ const createSession = (usr, cb) => {
     };
 
     // create the session in Redis
-    redisClient.set(sessionId, JSON.stringify(user));
-    redisClient.expire(sessionId, redisExp);
+    request.redis.set(`sess:${sessId}`, JSON.stringify(user));
+    request.redis.expire(`sess:${sessId}`, redisExp);
 
-    return cb(sessionId);
+    return cb(sessId);
 };
 
 export default {
-    destroy: (sessionId, cb) => {
-        redisClient.del(sessionId);
+    destroy: (request, sessionId, cb) => {
+        request.redis.del(`sess:${sessionId}`);
         return cb({ status: 'success' });
     },
-    getLoggedInAccount: (sessId) => {
+    getLoggedInAccount: (request, sessId) => {
         return new Promise((resolve, reject) => {
-            return redisClient.get(sessId, (err, sess) => {
+            return request.redis.get(`sess:${sessId}`, (err, sess) => {
                 if (err) { return reject(Boom.badRequest(err)); }
                 if (!sess) {
                     return reject(Boom.notFound('Session not found'));
@@ -43,9 +40,9 @@ export default {
             });
         });
     },
-    getSelfId: (sessId) => {
+    getSelfId: (request, sessId) => {
         return new Promise((resolve, reject) => {
-            return redisClient.get(sessId, (err, user) => {
+            return request.redis.get(`sess:${sessId}`, (err, user) => {
                 if (err) { return reject(Boom.badRequest(err)); }
                 if (!user) {
                     return reject(Boom.notFound('User ID not found in session'));
@@ -56,22 +53,22 @@ export default {
             });
         });
     },
-    validate: (usr) => {
+    validate: (request, usr) => {
         const redisExp = config.get('redis_expire');
         return new Promise((resolve, reject) => {
             if (!usr.sid) {
                 // no old session, create a new one
-                return createSession(usr, (result) => {
+                return createSession(request, usr, (result) => {
                     return resolve(result);
                 });
             }
 
-            return redisClient.get(usr.sid, (err, oldSid) => {
+            return request.redis.get(`sess:${usr.sid}`, (err, oldSid) => {
                 if (err) { return reject(Boom.badRequest(err)); }
 
                 if (!oldSid) {
                     // no old session, create a new one
-                    return createSession(usr, (result) => {
+                    return createSession(request, usr, (result) => {
                         return resolve(result);
                     });
                 }
@@ -84,13 +81,13 @@ export default {
 
                 // the session is expired, create a new one
                 if (expired) {
-                    return createSession(usr, (result) => {
+                    return createSession(request, usr, (result) => {
                         return resolve(result);
                     });
                 }
 
                 // update exp date on existing session
-                redisClient.expire(usr.sid, redisExp);
+                request.redis.expire(`sess:${usr.sid}`, redisExp);
                 return resolve(usr.sid);
             });
         });

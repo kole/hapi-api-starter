@@ -20,7 +20,7 @@ export default {
                 role: Joi.string().required(),
                 default: Joi.boolean() // default account for login
             })).required(),
-            createdAt: Joi.number().min(10).required(),
+            created_at: Joi.number().min(10).required(),
             last_seen_date: Joi.number().min(10),
             verified: Joi.boolean().required(),
             sid: Joi.string().guid()

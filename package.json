@@ -31,10 +31,10 @@
     "handlebars": "^4.0.6",
     "hapi": "16.1.0",
     "hapi-mongo-models": "6.0.0",
+    "hapi-redis-connection": "^1.0.1",
     "joi": "^10.2.0",
     "mongo-models": "1.1.0",
     "mongodb": "2.2.21",
-    "redis-connection": "^5.0.0",
     "sendgrid": "^4.7.1",
     "sendgrid-mailer": "^1.0.7",
     "uuid": "^3.0.1"

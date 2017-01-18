@@ -6,13 +6,13 @@ export default {
         const email = request.payload.email;
         const password = request.payload.password;
 
-        userActions.login(email, password, (userObj) => {
+        userActions.login(request, email, password, (userObj) => {
             return reply(userObj);
         });
     },
     destroy: (request, reply) => {
         const sessionId = request.headers.authorization;
-        sessionActions.destroy(sessionId, (result) => {
+        sessionActions.destroy(request, sessionId, (result) => {
             return reply(result);
         });
     }

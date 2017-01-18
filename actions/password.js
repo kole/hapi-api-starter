@@ -1,32 +1,26 @@
-import Boom from 'boom';
-import moment from 'moment';
 import MongoModels from 'mongo-models';
-import uuid from 'uuid/v4';
 
-import findUserByEmail from './users/getUserByEmail';
+import findPendingPasswordReset from './passwords/findPendingPasswordReset';
+import trackAttempt from './passwords/trackAttempt';
+// import rateLimit from './util/rateLimit';
 
 export default class Passwords extends MongoModels {
     // locate user in users collection,
     // then store a record in the temp password-reset collection
-    static initiate(user, cb) {
-        return findUserByEmail(user.email).then((usr) => {
-            const doc = {
-                _id: uuid(),
-                email: usr.email,
-                createdAt: moment(moment()).unix()
-            };
-            return this.insertOne(doc, (err, result) => {
-                if (err) { throw new Error(err); }
+    static initiate(request, cb) {
+        // use async/await for easy waterfall control flow
+        (async () => {
+            // look for pending password reset requests for this email
+            await findPendingPasswordReset(request);
 
-                if (!result[0]._id) {
-                    return cb(Boom.badRequest('Database error'));
-                }
+            // trigger rate limiting
+            // await rateLimit(pendingResetRequest);
 
-                return cb({ status: 'pending' });
-            });
-        }).catch((err) => {
-            return cb(Boom.badRequest(err));
-        });
+            // track password reset attempt
+            await trackAttempt(request);
+
+            return cb({ status: 'pending' });
+        })();
     }
 }
 

@@ -1,10 +1,20 @@
-/*
-    24 hours = 86,400 seconds
-    1 week = 604,800 seconds
-*/
 {
     "company_email": "hello@weelabs.io",
     "company_name": "WeeLabs",
     "redis_expire": 604800,
-    "session_length_in_seconds": 86400
+    "session_length_in_seconds": 86400,
+    "constants": {
+        "seconds": {
+            "five_minutes": 300,
+            "one_hour": 3600,
+            "one_week": 604800,
+            "twenty_four_hours": 86400
+        },
+        "ms": {
+            "five_minutes": 300000,
+            "one_hour": 3600000,
+            "one_week": 604800000,
+            "twenty_four_hours": 86400000
+        }
+    }
 }
