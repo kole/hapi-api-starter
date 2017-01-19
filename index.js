@@ -7,6 +7,7 @@ import Redis from 'hapi-redis-connection';
 import Vision from 'vision';
 import globalAuth from './auth/global';
 import userAuth from './auth/users';
+import globalRateLimiting from './globalRateLimiting';
 
 import Routes from './routes';
 
@@ -55,8 +56,12 @@ server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger, Redis], (err
     // load array of routes
     server.route(Routes);
 
-    // process all requests to confirm API access (different than user authentication)
+    // process on all requests to confirm API access (different than user authentication)
     server.ext('onPreAuth', globalAuth);
+
+    // run all basic-auth'd requests through rate limiting deterence logic
+    // this should stay after onPreAuth because basic auth requirements are the first level of defense
+    server.ext('onPostAuth', globalRateLimiting);
 
     if (!module.parent.parent) {
         // start the server

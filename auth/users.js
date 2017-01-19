@@ -27,7 +27,7 @@ internals.implementation = () => {
                 return reply(Boom.unauthorized('Please log in to access this resource'));
             }
 
-            return request.redis.get(authorization, (rediserror, result) => {
+            return request.redis.get(`sess:${authorization}`, (rediserror, result) => {
                 if (rediserror) {
                     return reply(Boom.badRequest(rediserror));
                 }
@@ -39,7 +39,7 @@ internals.implementation = () => {
                 }
 
                 // refresh session exp
-                request.redis.expire(authorization, config.get('redis_expire'));
+                request.redis.expire(`sess:${authorization}`, config.get('redis_expire'));
 
                 const credentials = {
                     Authorization: authorization,

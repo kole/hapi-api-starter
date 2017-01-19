@@ -3,7 +3,7 @@
     "company_name": "WeeLabs",
     "global_rate_limiting": {
         "active": true,
-        "required_time_between_repeat_requests_in_seconds": 2
+        "expire_in_seconds": 20
     },
     "redis_expire": 604800,
     "session_length_in_seconds": 86400,
