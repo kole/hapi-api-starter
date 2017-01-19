@@ -1,11 +1,18 @@
 {
     "company_email": "hello@weelabs.io",
     "company_name": "WeeLabs",
+    "global_rate_limiting": {
+        "active": true,
+        "required_time_between_repeat_requests_in_seconds": 2
+    },
     "redis_expire": 604800,
     "session_length_in_seconds": 86400,
     "password_reset": {
         "allowed_time_to_complete_in_seconds": 86400,
-        "allowed_time_between_requests_in_seconds": 60
+        "rate_limiting": {
+            "active": true,
+            "required_time_between_repeat_requests_in_seconds": 60
+        }
     },
     "constants": {
         "seconds": {

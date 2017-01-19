@@ -1,3 +1,4 @@
+import config from 'config';
 import MongoModels from 'mongo-models';
 
 import findPendingPasswordReset from './passwords/findPendingPasswordReset';
@@ -11,6 +12,8 @@ export default class Passwords extends MongoModels {
     static initiate(request, cb) {
         // use async/await for easy waterfall control flow
         (async () => {
+            const rl = config.get('password_reset.rate_limiting.active');
+
             // look for pending password reset requests for this email
             let existingRequest = await findPendingPasswordReset(request);
 
@@ -23,7 +26,10 @@ export default class Passwords extends MongoModels {
             await trackAttempt(request);
 
             // trigger rate limiting
-            await rateLimit(existingRequest);
+            if (rl) {
+                const allowedTimeBetweenRequests = config.get('password_reset.required_time_between_repeat_requests_in_seconds');
+                await rateLimit(existingRequest, allowedTimeBetweenRequests);
+            }
 
             return cb({ status: 'pending' });
         })();

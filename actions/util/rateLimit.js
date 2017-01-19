@@ -1,4 +1,3 @@
-import config from 'config';
 import moment from 'moment';
 
 // Fibonacci sequence for increased delay algorithm
@@ -20,9 +19,8 @@ const fib = (a) => {
 //  - IP + route (global rate limiting)
 //  - email + route (user rate limiting)
 
-export default function rateLimit(doc) {
+export default function rateLimit(doc, allowedTimeBetweenRequests) {
     const now = moment(moment()).unix();
-    const allowedTimeBetweenRequests = config.get('password_reset.allowed_time_between_requests_in_seconds');
     const ellapsed = (now - doc.last_requested_at) || (allowedTimeBetweenRequests + 1);
     const tooSoon = ellapsed < allowedTimeBetweenRequests;
     const count = doc.count || 1;
