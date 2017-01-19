@@ -1,6 +1,7 @@
 import MongoModels from 'mongo-models';
 
 import findPendingPasswordReset from './passwords/findPendingPasswordReset';
+import createPasswordResetRecord from './passwords/createPasswordResetRecord';
 import trackAttempt from './passwords/trackAttempt';
 // import rateLimit from './util/rateLimit';
 
@@ -11,7 +12,12 @@ export default class Passwords extends MongoModels {
         // use async/await for easy waterfall control flow
         (async () => {
             // look for pending password reset requests for this email
-            await findPendingPasswordReset(request);
+            const existingRequest = await findPendingPasswordReset(request);
+
+            // create the password reset record if it doesn't already exist
+            if (!existingRequest) {
+                await createPasswordResetRecord(request);
+            }
 
             // trigger rate limiting
             // await rateLimit(pendingResetRequest);
