@@ -22,23 +22,22 @@ const fib = (a) => {
 
 export default function rateLimit(doc) {
     const now = moment(moment()).unix();
-    const ellapsed = now - doc.last_requested_at || now - doc.created_at;
-    const expires = config.get('constants.seconds.twenty_four_hours');
-    const expired = ellapsed > expires;
+    const allowedTimeBetweenRequests = config.get('password_reset.allowed_time_between_requests_in_seconds');
+    const ellapsed = (now - doc.last_requested_at) || (allowedTimeBetweenRequests + 1);
+    const tooSoon = ellapsed < allowedTimeBetweenRequests;
+    const count = doc.count || 1;
 
-    const attempts = doc.count;
-    const freeRetries = 5;
-    const maxDelay = 60000; // the max delayed response time is 60 seconds
-    const delayInMilliseconds = attempts * 250;
+    // the delay algorithm is determined by the Fibonacci sequence
+    let delay = fib(count) * 1000; // convert to ms
+
+    // 3 free tries (within the allowed time limit) before we start rate limiting
+    if (count < 4 && !tooSoon) {
+        delay = 0;
+    }
 
     return new Promise((resolve) => {
-        // let's still assume this is a user and opt to not throttle the reply
-        if (attempts < freeRetries) {
-            return resolve();
-        }
         return setTimeout(() => {
-            console.log('delayed');
-            resolve('delayed');
-        }, 250);
+            resolve();
+        }, delay);
     });
 }

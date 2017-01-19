@@ -3,7 +3,7 @@ import MongoModels from 'mongo-models';
 import findPendingPasswordReset from './passwords/findPendingPasswordReset';
 import createPasswordResetRecord from './passwords/createPasswordResetRecord';
 import trackAttempt from './passwords/trackAttempt';
-// import rateLimit from './util/rateLimit';
+import rateLimit from './util/rateLimit';
 
 export default class Passwords extends MongoModels {
     // locate user in users collection,
@@ -12,18 +12,18 @@ export default class Passwords extends MongoModels {
         // use async/await for easy waterfall control flow
         (async () => {
             // look for pending password reset requests for this email
-            const existingRequest = await findPendingPasswordReset(request);
+            let existingRequest = await findPendingPasswordReset(request);
 
             // create the password reset record if it doesn't already exist
             if (!existingRequest) {
-                await createPasswordResetRecord(request);
+                existingRequest = await createPasswordResetRecord(request);
             }
 
-            // trigger rate limiting
-            // await rateLimit(pendingResetRequest);
-
-            // track password reset attempt
+            // track (record) password reset attempt
             await trackAttempt(request);
+
+            // trigger rate limiting
+            await rateLimit(existingRequest);
 
             return cb({ status: 'pending' });
         })();
