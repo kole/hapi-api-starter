@@ -23,9 +23,9 @@ Found here: `http://localhost:<port>/documentation`
 - linters
 - responses
 - routes
-    - _Contents_: .js files only
-    - *Structure*: Flat. This directory should only contain js files in the root, no additional subdirectories.
-    - *Responsibility*: Define the routes and configurations of those routes including:
+    - **Contents**: .js files only
+    - **Structure**: Flat. This directory should only contain js files in the root, no additional subdirectories.
+    - **Responsibility**: Define the routes and configurations of those routes including:
         - `method`
         - `path`
         - `auth`
