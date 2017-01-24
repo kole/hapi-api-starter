@@ -23,6 +23,8 @@ Found here: `http://localhost:<port>/documentation`
 - linters
 - responses
 - routes
+    - **Philosophy**: Each major route with associated methods and child paths should be contained in an appropriately named js file
+        - *Example*: `users.js` should contain route configs for `POST /users`, `GET /users`, `GET users/{id}`, etc.
     - **Contents**: .js files only
     - **Structure**: Flat. This directory should only contain js files in the root, no additional subdirectories.
     - **Responsibility**: Define the routes and configurations of those routes including:
