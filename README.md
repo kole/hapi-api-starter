@@ -2,7 +2,7 @@
 A general set of API endpoints that most apps use.
 
 # Documentation
-Found here: <a href="http://localhost:<port>/documentation">API Starter Docs</a>
+Found here: `http://localhost:<port>/documentation`
 
 # Primary Technologies Used
 - Javascript
