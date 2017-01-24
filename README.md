@@ -5,14 +5,14 @@ A general set of API endpoints that most apps use.
 Found here: `http://localhost:<port>/documentation`
 
 # Primary Technologies Used
-- Javascript
+- Javascript (ES2015, ES2016, ES2017)
 - Node.js
-- HapiJS
+- Hapi.js
 - MongoDB
 - Redis
 
 # Installation
-- `npm install` // install dependencies
+- `npm install // install dependencies`
 - `npm start` // start the app
 
 # App Structure and Responsibilities
