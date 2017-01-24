@@ -12,8 +12,7 @@ Found here: `http://localhost:<port>/documentation`
 - Redis
 
 # Installation
-- `npm install // install dependencies`
-- `npm start` // start the app
+- `npm install && npm start`
 
 # App Structure and Responsibilities
 - actions
@@ -31,5 +30,4 @@ Found here: `http://localhost:<port>/documentation`
 - index.js
 
 # Run Tests
-- `npm install` // if you haven't already done this
 - `npm test`
