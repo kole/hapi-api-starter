@@ -8,7 +8,7 @@
     "redis_expire": 604800,
     "session_length_in_seconds": 86400,
     "password_reset": {
-        "allowed_time_to_complete_in_seconds": 86400,
+        "expires_in_seconds": 86400,
         "rate_limiting": {
             "active": true,
             "required_time_between_repeat_requests_in_seconds": 60

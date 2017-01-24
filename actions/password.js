@@ -27,8 +27,7 @@ export default class Passwords extends MongoModels {
 
             // trigger rate limiting if active for this action
             if (rl) {
-                const allowedTimeBetweenRequests = config.get('password_reset.rate_limiting.required_time_between_repeat_requests_in_seconds');
-                await rateLimit(existingRequest, allowedTimeBetweenRequests);
+                await rateLimit(existingRequest);
             }
 
             return cb({ status: 'pending' });
