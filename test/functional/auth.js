@@ -4,11 +4,6 @@ import { expect } from 'chai';
 const server = require('../../index.js');
 
 describe('The API requires client-based basic authentication - apart from user authentication', () => {
-    // make sure the server fully loads before running tests
-    before((done) => {
-        server.on('start', done);
-    });
-
     it('should reject access to an endpoint that does not require user authentication', (done) => {
         server.inject({
             method: 'POST',
@@ -39,6 +34,15 @@ describe('The API requires client-based basic authentication - apart from user a
             // expect access to the API to be granted, but payload valiation will fail
             // hence the 400 response (not a 401 or 200)
             expect(response.statusCode).to.equal(400);
+            done();
+        });
+    });
+    it('should allow access (without basic auth) to an endpoint when the path is /documentation', (done) => {
+        server.inject({
+            method: 'GET',
+            url: '/documentation'
+        }, (response) => {
+            expect(response.statusCode).to.equal(200);
             done();
         });
     });

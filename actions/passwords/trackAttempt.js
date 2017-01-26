@@ -6,7 +6,6 @@ export default function trackAttempt(request) {
         request.redis.hmset(`pwdres:${request.payload.email}`, 'last_requested_at', now, () => {
             request.redis.hincrby(`pwdres:${request.payload.email}`, 'count', 1, () => {
                 request.redis.hgetall(`pwdres:${request.payload.email}`, (err, result) => {
-                    console.log(result);
                     return resolve(result);
                 });
             });

@@ -71,8 +71,8 @@ server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger, Redis], (err
             console.log(`Super hapi to be on port ${server.info.port} in ${process.env.NODE_ENV} mode on Node.js version ${process.versions.node}`);
         });
     } else {
-        // used for kicking off tests
-        server.emit('start');
+        // used for running tests without starting the server
+        server.initialize();
     }
 });
 
