@@ -1,4 +1,3 @@
-import moment from 'moment';
 import MongoModels from 'mongo-models';
 
 export default class Accounts extends MongoModels {
@@ -9,7 +8,7 @@ export default class Accounts extends MongoModels {
         const userId = [usr._id];
         const doc = {
             _id: user.accounts[0].aid,
-            createdAt: moment(moment()).unix(),
+            createdAt: new Date().getTime(),
             users: userId
         };
 

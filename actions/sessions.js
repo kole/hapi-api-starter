@@ -1,6 +1,5 @@
 import Boom from 'boom';
 import config from 'config';
-import moment from 'moment';
 import uuid from 'uuid/v4';
 
 const createSession = (request, usr, cb) => {
@@ -74,7 +73,7 @@ export default {
                 }
 
                 // there is an old session
-                const now = moment(moment()).unix();
+                const now = new Date().getTime();
                 const lastSeen = usr.last_seen_date || now;
                 const expDate = lastSeen + config.get('session_length_in_seconds');
                 const expired = now > expDate;

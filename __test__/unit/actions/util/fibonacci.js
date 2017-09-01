@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+/* eslint-env jest */
 
 import fib from '../../../../actions/util/fibonacci.js';
 

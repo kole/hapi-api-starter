@@ -1,5 +1,4 @@
 import config from 'config';
-import moment from 'moment';
 import uuid from 'uuid/v4';
 
 import findPendingPasswordReset from './findPendingPasswordReset';
@@ -7,7 +6,7 @@ import findPendingPasswordReset from './findPendingPasswordReset';
 export default function insertResetRecord(request) {
     // insert new record in database
     return new Promise((resolve) => {
-        const now = moment(moment()).unix();
+        const now = new Date().getTime();
         const k = `pwdres:${request.payload.email}`;
         const expires = config.get('password_reset.expires_in_seconds');
 

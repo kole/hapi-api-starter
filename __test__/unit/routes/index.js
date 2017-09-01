@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+/* eslint-env jest */
 import routesCompiler from '../../../routes/index.js';
 
 describe('The route array compiler should return an array of routes given an array of filenames', () => {

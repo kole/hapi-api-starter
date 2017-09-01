@@ -9,7 +9,9 @@ export default [
         config: {
             auth: false,
             handler: Handler.signup,
-            response: { schema: Response.signup },
+            response: {
+                schema: Response.signup
+            },
             validate: Validation.signup
         }
     }

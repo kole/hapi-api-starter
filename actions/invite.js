@@ -1,5 +1,4 @@
 import Boom from 'boom';
-import moment from 'moment';
 import MongoModels from 'mongo-models';
 import uuid from 'uuid/v4';
 
@@ -8,7 +7,7 @@ export default class Invitations extends MongoModels {
     static create(invite, cb) {
         const obj = {
             _id: uuid(),
-            createdAt: moment(moment()).unix()
+            createdAt: new Date().getTime()
         };
 
         const doc = Object.assign(invite, obj);

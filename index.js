@@ -63,16 +63,15 @@ server.register([userAuth, MongoModels, Vision, Inert, HapiSwagger, Redis], (err
     // this should stay after onPreAuth because basic auth requirements are the first level of defense
     server.ext('onPostAuth', globalRateLimiting);
 
-    if (!module.parent.parent) {
+    if (!module.parent) {
         // start the server
         server.start((e) => {
-            if (e) { throw new Error(e); }
-
+            if (e) { process.exit(1); }
             console.log(`Super hapi to be on port ${server.info.port} in ${process.env.NODE_ENV} mode on Node.js version ${process.versions.node}`);
         });
     } else {
-        // used for running tests without starting the server
         server.initialize();
+        server.emit('app-initialized');
     }
 });
 

@@ -1,5 +1,4 @@
 import Boom from 'boom';
-import moment from 'moment';
 
 // get users model
 import UsersCollection from '../users';
@@ -11,7 +10,7 @@ export default function insertUser(user, password) {
         const doc = Object.assign(user, {
             _id: user.userId,
             password,
-            created_at: moment(moment()).unix(),
+            created_at: new Date().getTime(),
             verified: false,
             verifyToken: Math.random().toString().replace('.', '').substring(1, 5) // 4 digit verification code sent to signup email
         });

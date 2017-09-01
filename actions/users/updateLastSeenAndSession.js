@@ -1,5 +1,4 @@
 import Boom from 'boom';
-import moment from 'moment';
 
 // get users model
 import UsersCollection from '../users';
@@ -11,7 +10,7 @@ export default function updateLastSeenAndSession(userId, sessId) {
     };
     const update = {
         $set: {
-            last_seen_date: moment(moment()).unix(),
+            last_seen_date: new Date().getTime(),
             sid: sessId
         }
     };

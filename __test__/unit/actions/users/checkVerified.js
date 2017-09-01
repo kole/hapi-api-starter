@@ -1,9 +1,6 @@
-import chai, { expect } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
+/* eslint-env jest */
 
 import checkVerified from '../../../../actions/users/checkVerified.js';
-
-chai.use(chaiAsPromised);
 
 describe('The user verified promise should resolve or reject based on the user object containing a truthy verified key', () => {
     it('should successfully resolve if verified is true', () => {
