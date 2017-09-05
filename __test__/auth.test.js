@@ -1,20 +1,30 @@
 /* eslint-env jest */
 
 import config from 'config';
+import ps from 'ps-node';
 
 const server = require('~/index.js');
 
 describe('The API requires client-based basic authentication - apart from user authentication', () => {
     beforeAll((done) => {
-        server.on('app-initialized', () => {
-            console.log('======================================================================================');
+        server.on('start', () => {
             done();
         });
     });
 
     afterAll((done) => {
         server.on('stop', () => {
-            console.log('STOP');
+            // kill jest process(es)
+            ps.lookup({
+                command: 'node',
+                arguments: 'jest'
+            }, (err, resultList) => {
+                resultList.forEach((p) => {
+                    if (p) {
+                        process.kill(p.pid);
+                    }
+                });
+            });
             done();
         });
         server.stop();
