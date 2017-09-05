@@ -1,9 +1,8 @@
 // concat all routes and export them as a single array
+import fs from 'fs';
+import path from 'path';
 
-const fs = require('fs');
-const path = require('path');
-
-const files = fs.readdirSync(__dirname).filter(f => f !== 'index.js' && path.extname(f) === '.js');
+const files = fs.readdirSync(__dirname).filter(f => f !== 'index.js' && f.indexOf('test') === -1 && path.extname(f) === '.js');
 const routesArr = [];
 
 files.map((file) => {
